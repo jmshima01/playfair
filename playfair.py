@@ -52,6 +52,7 @@ def clean_plaintext(p):
     return p
 
 
+
 def encrypt(matrix,k,p):
     m = make_matrix(k)
     p = clean_plaintext(p)
