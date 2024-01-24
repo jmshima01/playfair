@@ -77,7 +77,7 @@ def clean_plaintext(p):
         else:
             res.append(p[i:i+2])
             i+=2
-    return p
+    return res
 
 def getloc(matrix, c, pos):
     for i in range(5):
@@ -95,30 +95,25 @@ def encrypt_pair(matrix,par):
     elif pair.SAME_COL == pair_type(matrix, par[0],par[1]):
         return matrix[(getloc(matrix,par[0],'x')+1)%5][getloc(matrix,par[0],'y')] + matrix[(getloc(matrix,par[1],'x')+1)%5][getloc(matrix,par[1],'y')] 
     else:
-        return matrix[(getloc(matrix,par[0],'x')+1)%5][getloc(matrix,par[0],'y')] + matrix[(getloc(matrix,par[1],'x')+1)%5][getloc(matrix,par[1],'y')] 
-        
-                
+        par0x = getloc(matrix,par[0],'x')
+        par0y = getloc(matrix,par[0],'y')
+        par1x = getloc(matrix,par[1],'x')
+        par1y = getloc(matrix,par[1],'y')
+        return matrix[par0x][par1y] + matrix[par1x][par0y]
 
 def encrypt(k,p):
     m = make_matrix(k)
     p = clean_plaintext(p)
     c = ""
+    print(p)
+    for i in m: 
+        print(i)
     for x in p:
         c+= encrypt_pair(m,x)
-
-
+    print(c.upper())
     
-
-             
-            
-            
-            
-    
-
 if __name__ == '__main__':
-
     p = "Must see you over Cadogan West. Coming at once."
-    # p = 'hello'
-    key = "MONARCHY"
+    key = ""
     key = __fill_key(key)
     encrypt(key,p)
