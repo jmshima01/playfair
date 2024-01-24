@@ -49,8 +49,6 @@ def clean_plaintext(p):
     for i in range(0,len(p)-1,2):
         res.append(p[i:i+2])
     print(res)
-
-
     print(res)
     return p
 
