@@ -1,4 +1,28 @@
+from enum import Enum
 
+class pair(Enum):
+    SAME_ROW = 1
+    SAME_COL = 2
+    NEITHER = 3
+
+def pair_type(matrix,x,y):
+    xloc = 0
+    yloc = 0
+
+    for i in range(5):
+        for j in range(5):
+            if matrix[i][j] == x:
+                xloc = (i,j)
+            elif matrix[i][j] == y:
+                yloc = (i,j)
+    
+    if xloc[0] == yloc[0]:
+        return pair.SAME_ROW
+    elif xloc[1] == yloc[1]:
+        return pair.SAME_COL
+    else:
+        return pair.NEITHER
+    
 def __fill_key(key):
     if len(key)>25:
         print("key too large")
@@ -31,37 +55,62 @@ def make_matrix(key):
     ind = 0
     for i in range(5):
         for j in range(5):
-            matrix[i][j] = ord(k[ind])-ord('a')
+            matrix[i][j] = k[ind]
             ind+=1
-    for i in matrix:
-        print(i)
+
+    
+    return matrix
 
 def clean_plaintext(p):
     p = p.lower()
     for i in p:
         if not i.isalpha():
             p = p.replace(i,"")
-    print(p)
 
     filler='x'
     res = []
-    
-    for i in range(0,len(p)-1,2):
-        res.append(p[i:i+2])
-        
-    print(res)
-    print(res)
+    i = 0
+    while i <len(p)-1:    
+        if(p[i] == p[i+1]):
+            res.append(p[i]+filler)
+            i+=1
+        else:
+            res.append(p[i:i+2])
+            i+=2
     return p
 
+def getloc(matrix, c, pos):
+    for i in range(5):
+        for j in range(5):
+            if matrix[i][j] == c:
+                if pos=='x':
+                    return i
+                else:
+                    return j
 
+def encrypt_pair(matrix,par):
+    
+    if pair.SAME_ROW == pair_type(matrix, par[0],par[1]):
+        return matrix[getloc(matrix,par[0],'x')][(getloc(matrix,par[0],'y')+1)%5] + matrix[getloc(matrix,par[1],'x')][(getloc(matrix,par[1],'y')+1)%5]      
+    elif pair.SAME_COL == pair_type(matrix, par[0],par[1]):
+        return matrix[(getloc(matrix,par[0],'x')+1)%5][getloc(matrix,par[0],'y')] + matrix[(getloc(matrix,par[1],'x')+1)%5][getloc(matrix,par[1],'y')] 
+    else:
+        return matrix[(getloc(matrix,par[0],'x')+1)%5][getloc(matrix,par[0],'y')] + matrix[(getloc(matrix,par[1],'x')+1)%5][getloc(matrix,par[1],'y')] 
+        
+                
 
-def encrypt(matrix,k,p):
+def encrypt(k,p):
     m = make_matrix(k)
     p = clean_plaintext(p)
     c = ""
+    for x in p:
+        c+= encrypt_pair(m,x)
 
-    for i in range(5):
-        for j in range(5):
+
+    
+
+             
+            
             
             
     
@@ -69,8 +118,7 @@ def encrypt(matrix,k,p):
 if __name__ == '__main__':
 
     p = "Must see you over Cadogan West. Coming at once."
-    matrix_key = "MONARCHY"
-    f = __fill_key(matrix_key)
-    print(f)
-    clean_plaintext(p)
-    make_matrix(matrix_key)
+    # p = 'hello'
+    key = "MONARCHY"
+    key = __fill_key(key)
+    encrypt(key,p)
